@@ -1,4 +1,5 @@
 #include <LiquidCrystal.h>
+#include <QueueList.h>
 
 // initialize the library with the numbers of the interface pins
 LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
@@ -83,7 +84,7 @@ class Ship
 };
 
 Player player(0);
-Ship ship(COLS - 2, 0);
+QueueList<Ship> ships;
 
 bool gameIsRunning;
 
@@ -116,13 +117,15 @@ void loop() {
       }
       // r
       if (input == 114) {
-        ship = Ship(COLS - 2, random(0, 2));
+        ships.push(Ship(COLS - 2, random(0, 2)));
       }
     }
 
     player.Draw();
-    ship.Draw();
-    ship.Update(player);
+    for(int i = 0;i < ships.count();i++) {
+      ships[i].Draw();
+      ships[i].Update(player);
+    }
     delay(1000);
     lcd.clear();
   }
